@@ -18,7 +18,12 @@ TARGET_ZONES = [
     'The Secret Cow Level'
 ]
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
 logger = logging.getLogger(__name__)
 
 def check_terror_zone():
@@ -27,7 +32,6 @@ def check_terror_zone():
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extracting the current and next terror zones using their IDs
         current_zone = soup.find(id='a2x')
         next_zone = soup.find(id='x2a')
 
