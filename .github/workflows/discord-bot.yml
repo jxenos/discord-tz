@@ -1,7 +1,6 @@
 name: Discord Terror Zone Bot
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '1 * * * *'  # Runs 1 minute after every hour
 
@@ -26,4 +25,5 @@ jobs:
     - name: Run Bot
       env:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-      run: python main.py
+      run: |
+        python main.py 2>&1 | tee output.log
