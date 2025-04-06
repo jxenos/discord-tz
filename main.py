@@ -16,7 +16,6 @@ TARGET_ZONES = [
     'Arcane Sanctuary',
     'Halls of Vaught',
     'The Secret Cow Level'
-    'Ancient'
 ]
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -28,17 +27,25 @@ def check_terror_zone():
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        tz_tracker = soup.find(id='tz-tracker')
-        if tz_tracker:
-            next_zone_header = tz_tracker.find('h2', string='Next Terror Zone:')
-            if next_zone_header:
-                next_zone = next_zone_header.find_next_sibling('p').get_text(strip=True)
-                if any(zone.lower() in next_zone.lower() for zone in TARGET_ZONES):
-                    message = {"content": f'⚔️ **Upcoming Terror Zone:** {next_zone}!'}
-                    requests.post(WEBHOOK_URL, json=message)
-                    logger.info(f"Pinged zone: {next_zone}")
-                else:
-                    logger.info(f"No target zone match found for: {next_zone}")
+        # Extracting the current and next terror zones using their IDs
+        current_zone = soup.find(id='a2x')
+        next_zone = soup.find(id='x2a')
+
+        if current_zone:
+            current_zone_text = current_zone.get_text(strip=True)
+            logger.info(f"Current Terror Zone: {current_zone_text}")
+        
+        if next_zone:
+            next_zone_text = next_zone.get_text(strip=True)
+            logger.info(f"Next Terror Zone: {next_zone_text}")
+            
+            if any(zone.lower() in next_zone_text.lower() for zone in TARGET_ZONES):
+                message = {"content": f'⚔️ **Upcoming Terror Zone:** {next_zone_text}!'}
+                requests.post(WEBHOOK_URL, json=message)
+                logger.info(f"Pinged zone: {next_zone_text}")
+            else:
+                logger.info(f"No target zone match found for: {next_zone_text}")
+
     except Exception as e:
         logger.error(f"Error fetching or parsing the webpage: {e}")
 
