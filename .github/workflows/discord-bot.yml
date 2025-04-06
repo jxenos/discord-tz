@@ -1,6 +1,7 @@
 name: Discord Terror Zone Bot
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '1 * * * *'  # Runs 1 minute after every hour
 
