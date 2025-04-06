@@ -16,6 +16,7 @@ TARGET_ZONES = [
     'Arcane Sanctuary',
     'Halls of Vaught',
     'The Secret Cow Level'
+    'Ancient'
 ]
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
